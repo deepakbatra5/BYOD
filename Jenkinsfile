@@ -9,12 +9,31 @@ pipeline {
 
     stages {
 
+        /* =========================
+           DEBUG (IMPORTANT)
+        ========================== */
+        stage('Debug Branch') {
+            steps {
+                echo "Running on branch: ${env.BRANCH_NAME}"
+                sh '''
+                    echo "Git branch from repo:"
+                    git branch --show-current
+                '''
+            }
+        }
+
+        /* =========================
+           CHECKOUT
+        ========================== */
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
+        /* =========================
+           TERRAFORM INIT
+        ========================== */
         stage('Terraform Init & Inspect Vars') {
             steps {
                 dir('infra/terraform') {
@@ -38,6 +57,9 @@ pipeline {
             }
         }
 
+        /* =========================
+           TERRAFORM PLAN (ALL BRANCHES)
+        ========================== */
         stage('Terraform Plan') {
             steps {
                 dir('infra/terraform') {
@@ -55,18 +77,28 @@ pipeline {
             }
         }
 
+        /* =========================
+           MANUAL VALIDATION (DEV ONLY)
+        ========================== */
         stage('Validate Apply') {
             when {
-                branch 'dev'
+                expression {
+                    env.BRANCH_NAME == 'dev'
+                }
             }
             steps {
                 input message: 'Approve Terraform Apply for DEV environment?'
             }
         }
 
+        /* =========================
+           TERRAFORM APPLY (DEV ONLY)
+        ========================== */
         stage('Terraform Apply') {
             when {
-                branch 'dev'
+                expression {
+                    env.BRANCH_NAME == 'dev'
+                }
             }
             steps {
                 dir('infra/terraform') {
@@ -80,6 +112,15 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Terraform pipeline completed successfully."
+        }
+        failure {
+            echo "Terraform pipeline failed."
         }
     }
 }
