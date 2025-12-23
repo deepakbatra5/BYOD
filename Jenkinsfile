@@ -4,9 +4,7 @@ pipeline {
     environment {
         TF_IN_AUTOMATION = 'true'
         TF_CLI_ARGS      = '-no-color'
-
-        // SSH credential (already created)
-        SSH_CRED_ID = 'ec2-ssh-key'
+        SSH_CRED_ID      = 'ec2-ssh-key'
     }
 
     stages {
@@ -29,11 +27,11 @@ pipeline {
                             terraform init
 
                             echo "================================="
-                            echo "Using variable file:"
-                            echo "${BRANCH_NAME}.tfvars"
+                            echo "Using variable file: terraform.tfvars"
                             echo "================================="
 
-                            cat ${BRANCH_NAME}.tfvars
+                            ls -l
+                            cat terraform.tfvars
                         '''
                     }
                 }
@@ -47,11 +45,11 @@ pipeline {
                         [$class: 'AmazonWebServicesCredentialsBinding',
                          credentialsId: 'aws-credentials']
                     ]) {
-                        sh """
+                        sh '''
                             terraform plan \
-                            -var-file=${BRANCH_NAME}.tfvars \
-                            -out=tfplan
-                        """
+                              -var-file=terraform.tfvars \
+                              -out=tfplan
+                        '''
                     }
                 }
             }
@@ -63,6 +61,24 @@ pipeline {
             }
             steps {
                 input message: 'Approve Terraform Apply for DEV environment?'
+            }
+        }
+
+        stage('Terraform Apply') {
+            when {
+                branch 'dev'
+            }
+            steps {
+                dir('infra/terraform') {
+                    withCredentials([
+                        [$class: 'AmazonWebServicesCredentialsBinding',
+                         credentialsId: 'aws-credentials']
+                    ]) {
+                        sh '''
+                            terraform apply -auto-approve tfplan
+                        '''
+                    }
+                }
             }
         }
     }
