@@ -10,19 +10,6 @@ pipeline {
     stages {
 
         /* =========================
-           DEBUG (IMPORTANT)
-        ========================== */
-        stage('Debug Branch') {
-            steps {
-                echo "Running on branch: ${env.BRANCH_NAME}"
-                sh '''
-                    echo "Git branch from repo:"
-                    git branch --show-current
-                '''
-            }
-        }
-
-        /* =========================
            CHECKOUT
         ========================== */
         stage('Checkout') {
@@ -32,9 +19,22 @@ pipeline {
         }
 
         /* =========================
+           DEBUG (VERY IMPORTANT)
+        ========================== */
+        stage('Debug Info') {
+            steps {
+                echo "BRANCH_NAME from Jenkins: ${env.BRANCH_NAME}"
+                sh '''
+                    echo "Git branch detected:"
+                    git branch --show-current
+                '''
+            }
+        }
+
+        /* =========================
            TERRAFORM INIT
         ========================== */
-        stage('Terraform Init & Inspect Vars') {
+        stage('Terraform Init') {
             steps {
                 dir('infra/terraform') {
                     withCredentials([
@@ -42,15 +42,9 @@ pipeline {
                          credentialsId: 'aws-credentials']
                     ]) {
                         sh '''
-                            echo "Initializing Terraform..."
                             terraform init
-
-                            echo "================================="
-                            echo "Using variable file: terraform.tfvars"
-                            echo "================================="
-
+                            echo "Using terraform.tfvars"
                             ls -l
-                            cat terraform.tfvars
                         '''
                     }
                 }
@@ -58,7 +52,7 @@ pipeline {
         }
 
         /* =========================
-           TERRAFORM PLAN (ALL BRANCHES)
+           TERRAFORM PLAN (ALL CASES)
         ========================== */
         stage('Terraform Plan') {
             steps {
@@ -78,37 +72,51 @@ pipeline {
         }
 
         /* =========================
-           MANUAL VALIDATION (DEV ONLY)
+           MANUAL APPROVAL (NEVER SKIPPED)
         ========================== */
-        stage('Validate Apply') {
-            when {
-                expression {
-                    env.BRANCH_NAME == 'dev'
-                }
-            }
+        stage('Manual Approval') {
             steps {
-                input message: 'Approve Terraform Apply for DEV environment?'
+                script {
+                    def userChoice = input(
+                        message: "Approve Terraform APPLY?",
+                        ok: "Approve",
+                        parameters: [
+                            choice(
+                                name: 'ACTION',
+                                choices: ['NO', 'YES'],
+                                description: 'Select YES to apply Terraform changes'
+                            )
+                        ]
+                    )
+
+                    if (userChoice == 'YES') {
+                        env.DO_APPLY = 'true'
+                    } else {
+                        env.DO_APPLY = 'false'
+                    }
+                }
             }
         }
 
         /* =========================
-           TERRAFORM APPLY (DEV ONLY)
+           TERRAFORM APPLY (CONTROLLED)
         ========================== */
         stage('Terraform Apply') {
-            when {
-                expression {
-                    env.BRANCH_NAME == 'dev'
-                }
-            }
             steps {
-                dir('infra/terraform') {
-                    withCredentials([
-                        [$class: 'AmazonWebServicesCredentialsBinding',
-                         credentialsId: 'aws-credentials']
-                    ]) {
-                        sh '''
-                            terraform apply -auto-approve tfplan
-                        '''
+                script {
+                    if (env.DO_APPLY == 'true') {
+                        dir('infra/terraform') {
+                            withCredentials([
+                                [$class: 'AmazonWebServicesCredentialsBinding',
+                                 credentialsId: 'aws-credentials']
+                            ]) {
+                                sh '''
+                                    terraform apply -auto-approve tfplan
+                                '''
+                            }
+                        }
+                    } else {
+                        echo "Terraform Apply was NOT approved. Skipping apply safely."
                     }
                 }
             }
@@ -118,6 +126,9 @@ pipeline {
     post {
         success {
             echo "Terraform pipeline completed successfully."
+        }
+        aborted {
+            echo "Pipeline aborted by user."
         }
         failure {
             echo "Terraform pipeline failed."
