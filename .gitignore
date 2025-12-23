@@ -20,7 +20,7 @@ logs/
 *.err
 
 ##############################################
-# DOCKER my docker files
+# DOCKER 
 ##############################################
 # Ignore Docker build artifacts
 .docker/
