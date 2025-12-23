@@ -25,7 +25,7 @@
     # CLONE / UPDATE PROJECT
     # ---------------------------------------------------------
 
-    - name: Create app directory if missing
+    - name: Create app directory if missing or not
       file:
         path: "{{ app_path }}"
         state: directory
