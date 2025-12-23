@@ -5,11 +5,7 @@ pipeline {
         TF_IN_AUTOMATION = 'true'
         TF_CLI_ARGS      = '-no-color'
 
-        // AWS credentials (EXACT ID from Jenkins)
-        AWS_ACCESS_KEY_ID     = credentials('aws-credentials').accessKey
-        AWS_SECRET_ACCESS_KEY = credentials('aws-credentials').secretKey
-
-        // SSH key credential ID (used later for Ansible/EC2)
+        // SSH credential (already created)
         SSH_CRED_ID = 'ec2-ssh-key'
     }
 
@@ -24,17 +20,22 @@ pipeline {
         stage('Terraform Init & Inspect Vars') {
             steps {
                 dir('infra/terraform') {
-                    sh '''
-                      echo "Initializing Terraform..."
-                      terraform init
+                    withCredentials([
+                        [$class: 'AmazonWebServicesCredentialsBinding',
+                         credentialsId: 'aws-credentials']
+                    ]) {
+                        sh '''
+                            echo "Initializing Terraform..."
+                            terraform init
 
-                      echo "================================="
-                      echo "Using variable file:"
-                      echo "${BRANCH_NAME}.tfvars"
-                      echo "================================="
+                            echo "================================="
+                            echo "Using variable file:"
+                            echo "${BRANCH_NAME}.tfvars"
+                            echo "================================="
 
-                      cat ${BRANCH_NAME}.tfvars
-                    '''
+                            cat ${BRANCH_NAME}.tfvars
+                        '''
+                    }
                 }
             }
         }
@@ -42,11 +43,16 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 dir('infra/terraform') {
-                    sh """
-                      terraform plan \
-                      -var-file=${BRANCH_NAME}.tfvars \
-                      -out=tfplan
-                    """
+                    withCredentials([
+                        [$class: 'AmazonWebServicesCredentialsBinding',
+                         credentialsId: 'aws-credentials']
+                    ]) {
+                        sh """
+                            terraform plan \
+                            -var-file=${BRANCH_NAME}.tfvars \
+                            -out=tfplan
+                        """
+                    }
                 }
             }
         }
