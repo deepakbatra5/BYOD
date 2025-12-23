@@ -1,5 +1,5 @@
 ##############################################
-# NODE.JS / NPM / FRONTEND / BACKEND/hello
+# NODE.JS / NPM / FRONTEND / BACKEND/hello my friends
 ##############################################
 node_modules/
 npm-debug.log*
@@ -20,7 +20,7 @@ logs/
 *.err
 
 ##############################################
-# DOCKER
+# DOCKER my docker files
 ##############################################
 # Ignore Docker build artifacts
 .docker/
