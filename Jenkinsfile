@@ -100,7 +100,7 @@ pipeline {
                     playbook: 'infra/ansible/splunk.yml',
                     inventory: 'dynamic_inventory.ini',
                     credentialsId: 'ec2-ssh-key',
-                    extras: '-o StrictHostKeyChecking=no'
+                    extras: '--ssh-extra-args="-o StrictHostKeyChecking=no"'
                 )
             }
         }
@@ -114,7 +114,7 @@ pipeline {
                     playbook: 'infra/ansible/test-splunk.yml',
                     inventory: 'dynamic_inventory.ini',
                     credentialsId: 'ec2-ssh-key',
-                    extras: '-o StrictHostKeyChecking=no'
+                    extras: '--ssh-extra-args="-o StrictHostKeyChecking=no"'
                 )
             }
         }
