@@ -1,26 +1,20 @@
+---
 - hosts: splunk
   become: yes
-  tasks:
 
-    - name: Install required packages
+  tasks:
+    - name: Update apt cache
       apt:
-        name: wget
-        state: present
         update_cache: yes
 
-    - name: Download Splunk Universal Forwarder (stable)
+    - name: Download Splunk
       get_url:
-        url: https://download.splunk.com/products/universalforwarder/releases/9.0.6/linux/splunkforwarder-9.0.6-linux-amd64.tgz
-        dest: /tmp/splunkforwarder.tgz
-        mode: '0644'
+        url: https://download.splunk.com/products/splunk/releases/9.1.1/linux/splunk-9.1.1-64e843ea36b1-linux-2.6-amd64.deb
+        dest: /tmp/splunk.deb
 
-    - name: Extract Splunk Forwarder
-      unarchive:
-        src: /tmp/splunkforwarder.tgz
-        dest: /opt
-        remote_src: yes
+    - name: Install Splunk
+      apt:
+        deb: /tmp/splunk.deb
 
-    - name: Start Splunk Forwarder and accept license
-      command: /opt/splunkforwarder/bin/splunk start --accept-license --answer-yes --no-prompt
-      args:
-        creates: /opt/splunkforwarder/bin/splunk
+    - name: Start Splunk
+      command: /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
