@@ -1,9 +1,13 @@
 - hosts: splunk
   become: yes
-  tasks:
-    - name: Check Splunk Forwarder status
-      command: /opt/splunkforwarder/bin/splunk status
-      register: splunk_status
+  gather_facts: no
 
-    - debug:
+  tasks:
+    - name: Check Splunk Enterprise status
+      command: /opt/splunk/bin/splunk status
+      register: splunk_status
+      changed_when: false
+
+    - name: Show Splunk status
+      debug:
         var: splunk_status.stdout
