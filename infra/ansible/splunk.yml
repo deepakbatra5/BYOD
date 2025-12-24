@@ -8,19 +8,19 @@
         state: present
         update_cache: yes
 
-    - name: Download Splunk Enterprise (latest stable)
+    - name: Download Splunk Universal Forwarder (stable)
       get_url:
-        url: https://download.splunk.com/products/splunk/releases/latest/linux/splunk-latest-linux-amd64.tgz
-        dest: /tmp/splunk.tgz
+        url: https://download.splunk.com/products/universalforwarder/releases/9.0.6/linux/splunkforwarder-9.0.6-linux-amd64.tgz
+        dest: /tmp/splunkforwarder.tgz
         mode: '0644'
 
-    - name: Extract Splunk
+    - name: Extract Splunk Forwarder
       unarchive:
-        src: /tmp/splunk.tgz
+        src: /tmp/splunkforwarder.tgz
         dest: /opt
         remote_src: yes
 
-    - name: Start Splunk and accept license
-      command: /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
+    - name: Start Splunk Forwarder and accept license
+      command: /opt/splunkforwarder/bin/splunk start --accept-license --answer-yes --no-prompt
       args:
-        creates: /opt/splunk/bin/splunk
+        creates: /opt/splunkforwarder/bin/splunk
