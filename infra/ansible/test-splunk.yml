@@ -1,0 +1,5 @@
+- hosts: splunk
+  become: yes
+  tasks:
+    - name: Verify Splunk Service
+      shell: /opt/splunk/bin/splunk status

@@ -1,0 +1,8 @@
+- hosts: splunk
+  become: yes
+  tasks:
+    - name: Install Splunk
+      shell: |
+        wget -O splunk.tgz https://download.splunk.com/products/splunk/releases/9.2.0/linux/splunk-9.2.0.tgz
+        tar -xzf splunk.tgz -C /opt
+        /opt/splunk/bin/splunk start --accept-license --answer-yes
