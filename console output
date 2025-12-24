@@ -1,0 +1,599 @@
+Push event to branch dev
+10:16:02 Connecting to https://api.github.com using 2493969/****** (test connections)
+Obtained Jenkinsfile from af0c5ec008a00ee123e65683554d0a3542ac74b7
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins
+ in /var/lib/jenkins/workspace/BYOD3_dev
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential jenkins-github-app
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/BYOD3_dev/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/deepakbatra5/BYOD.git # timeout=10
+Fetching without tags
+Fetching upstream changes from https://github.com/deepakbatra5/BYOD.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+using GIT_ASKPASS to set credentials test connections
+ > git fetch --no-tags --force --progress -- https://github.com/deepakbatra5/BYOD.git +refs/heads/dev:refs/remotes/origin/dev # timeout=10
+Checking out Revision af0c5ec008a00ee123e65683554d0a3542ac74b7 (dev)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f af0c5ec008a00ee123e65683554d0a3542ac74b7 # timeout=10
+Commit message: "run auto"
+ > git rev-list --no-walk a360c416c2b620fe61733b38ca69791d9b7912cc # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential jenkins-github-app
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/BYOD3_dev/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/deepakbatra5/BYOD.git # timeout=10
+Fetching without tags
+Fetching upstream changes from https://github.com/deepakbatra5/BYOD.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.43.0'
+using GIT_ASKPASS to set credentials test connections
+ > git fetch --no-tags --force --progress -- https://github.com/deepakbatra5/BYOD.git +refs/heads/dev:refs/remotes/origin/dev # timeout=10
+Checking out Revision af0c5ec008a00ee123e65683554d0a3542ac74b7 (dev)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f af0c5ec008a00ee123e65683554d0a3542ac74b7 # timeout=10
+Commit message: "run auto"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Apply)
+[Pipeline] dir
+Running in /var/lib/jenkins/workspace/BYOD3_dev/infra/terraform
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ terraform init
+Initializing the backend...
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Reusing previous version of hashicorp/local from the dependency lock file
+- Reusing previous version of hashicorp/template from the dependency lock file
+- Using previously-installed hashicorp/template v2.2.0
+- Using previously-installed hashicorp/aws v5.100.0
+- Using previously-installed hashicorp/local v2.6.1
+
+Terraform has been successfully initialized!
++ terraform apply -auto-approve -var-file=terraform.tfvars
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # aws_instance.app_server will be created
+  + resource "aws_instance" "app_server" {
+      + ami                                  = "ami-03deb8c961063af8c"
+      + arn                                  = (known after apply)
+      + associate_public_ip_address          = (known after apply)
+      + availability_zone                    = (known after apply)
+      + cpu_core_count                       = (known after apply)
+      + cpu_threads_per_core                 = (known after apply)
+      + disable_api_stop                     = (known after apply)
+      + disable_api_termination              = (known after apply)
+      + ebs_optimized                        = (known after apply)
+      + enable_primary_ipv6                  = (known after apply)
+      + get_password_data                    = false
+      + host_id                              = (known after apply)
+      + host_resource_group_arn              = (known after apply)
+      + iam_instance_profile                 = (known after apply)
+      + id                                   = (known after apply)
+      + instance_initiated_shutdown_behavior = (known after apply)
+      + instance_lifecycle                   = (known after apply)
+      + instance_state                       = (known after apply)
+      + instance_type                        = "t3.micro"
+      + ipv6_address_count                   = (known after apply)
+      + ipv6_addresses                       = (known after apply)
+      + key_name                             = "fullstack-cicd"
+      + monitoring                           = (known after apply)
+      + outpost_arn                          = (known after apply)
+      + password_data                        = (known after apply)
+      + placement_group                      = (known after apply)
+      + placement_partition_number           = (known after apply)
+      + primary_network_interface_id         = (known after apply)
+      + private_dns                          = (known after apply)
+      + private_ip                           = (known after apply)
+      + public_dns                           = (known after apply)
+      + public_ip                            = (known after apply)
+      + secondary_private_ips                = (known after apply)
+      + security_groups                      = (known after apply)
+      + source_dest_check                    = true
+      + spot_instance_request_id             = (known after apply)
+      + subnet_id                            = (known after apply)
+      + tags                                 = {
+          + "Name" = "cicd-app-server"
+        }
+      + tags_all                             = {
+          + "Name" = "cicd-app-server"
+        }
+      + tenancy                              = (known after apply)
+      + user_data                            = (known after apply)
+      + user_data_base64                     = (known after apply)
+      + user_data_replace_on_change          = false
+      + vpc_security_group_ids               = (known after apply)
+
+      + capacity_reservation_specification (known after apply)
+
+      + cpu_options (known after apply)
+
+      + ebs_block_device (known after apply)
+
+      + enclave_options (known after apply)
+
+      + ephemeral_block_device (known after apply)
+
+      + instance_market_options (known after apply)
+
+      + maintenance_options (known after apply)
+
+      + metadata_options (known after apply)
+
+      + network_interface (known after apply)
+
+      + private_dns_name_options (known after apply)
+
+      + root_block_device (known after apply)
+    }
+
+  # aws_security_group.app_sg will be created
+  + resource "aws_security_group" "app_sg" {
+      + arn                    = (known after apply)
+      + description            = "Allow SSH and HTTP"
+      + egress                 = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 0
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "-1"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + id                     = (known after apply)
+      + ingress                = [
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 22
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 22
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 8000
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8000
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 8089
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 8089
+                # (1 unchanged attribute hidden)
+            },
+          + {
+              + cidr_blocks      = [
+                  + "0.0.0.0/0",
+                ]
+              + from_port        = 9997
+              + ipv6_cidr_blocks = []
+              + prefix_list_ids  = []
+              + protocol         = "tcp"
+              + security_groups  = []
+              + self             = false
+              + to_port          = 9997
+                # (1 unchanged attribute hidden)
+            },
+        ]
+      + name                   = (known after apply)
+      + name_prefix            = "app-sg"
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags_all               = (known after apply)
+      + vpc_id                 = (known after apply)
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + app_server_instance_id = (known after apply)
+  + app_server_public_ip   = (known after apply)
+aws_security_group.app_sg: Creating...
+aws_security_group.app_sg: Creation complete after 7s [id=sg-029043f7f50b05151]
+aws_instance.app_server: Creating...
+aws_instance.app_server: Still creating... [00m10s elapsed]
+aws_instance.app_server: Creation complete after 17s [id=i-03c59314433df2bff]
+
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+app_server_instance_id = "i-03c59314433df2bff"
+app_server_public_ip = "3.239.117.252"
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Capture Terraform Outputs)
+[Pipeline] dir
+Running in /var/lib/jenkins/workspace/BYOD3_dev/infra/terraform
+[Pipeline] {
+[Pipeline] script
+[Pipeline] {
+[Pipeline] sh
++ terraform output -raw app_server_public_ip
+[Pipeline] sh
++ terraform output -raw app_server_instance_id
+[Pipeline] echo
+EC2 Public IP: 3.239.117.252
+[Pipeline] echo
+EC2 Instance ID: i-03c59314433df2bff
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Create Dynamic Inventory)
+[Pipeline] sh
++ echo [splunk]
++ echo 3.239.117.252
++ cat dynamic_inventory.ini
+[splunk]
+3.239.117.252
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Wait for EC2 Health)
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ aws ec2 wait instance-status-ok --instance-ids i-03c59314433df2bff
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Install Splunk)
+[Pipeline] ansiblePlaybook
+[BYOD3_dev] $ ansible-playbook infra/ansible/splunk.yml -i dynamic_inventory.ini --private-key /var/lib/jenkins/workspace/BYOD3_dev/ssh3330468449005101249.key -u ubuntu "--ssh-extra-args=-o StrictHostKeyChecking=no"
+
+PLAY [splunk] ******************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [3.239.117.252]
+[WARNING]: Host '3.239.117.252' is using the discovered Python interpreter at '/usr/bin/python3.10', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.19/reference_appendices/interpreter_discovery.html for more information.
+
+TASK [Install required packages] ***********************************************
+ok: [3.239.117.252]
+
+TASK [Download Splunk Universal Forwarder (stable)] ****************************
+[ERROR]: Task failed: Module failed: Request failed
+Origin: /var/lib/jenkins/workspace/BYOD3_dev/infra/ansible/splunk.yml:11:7
+
+ 9         update_cache: yes
+10
+11     - name: Download Splunk Universal Forwarder (stable)
+         ^ column 7
+
+fatal: [3.239.117.252]: FAILED! => {"changed": false, "dest": "/tmp/splunkforwarder.tgz", "elapsed": 0, "msg": "Request failed", "response": "HTTP Error 404: Not Found", "status_code": 404, "url": "https://download.splunk.com/products/universalforwarder/releases/9.0.6/linux/splunkforwarder-9.0.6-linux-amd64.tgz"}
+
+PLAY RECAP *********************************************************************
+3.239.117.252              : ok=2    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+
+FATAL: command execution failed
+hudson.AbortException: Ansible playbook execution failed
+	at PluginClassLoader for ansible//org.jenkinsci.plugins.ansible.AnsiblePlaybookBuilder.perform(AnsiblePlaybookBuilder.java:328)
+	at PluginClassLoader for ansible//org.jenkinsci.plugins.ansible.workflow.AnsiblePlaybookStep$AnsiblePlaybookExecution.run(AnsiblePlaybookStep.java:466)
+	at PluginClassLoader for ansible//org.jenkinsci.plugins.ansible.workflow.AnsiblePlaybookStep$AnsiblePlaybookExecution.run(AnsiblePlaybookStep.java:365)
+	at PluginClassLoader for workflow-step-api//org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution$1$1.call(AbstractSynchronousNonBlockingStepExecution.java:47)
+	at hudson.security.ACL.impersonate2(ACL.java:451)
+	at PluginClassLoader for workflow-step-api//org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution$1.run(AbstractSynchronousNonBlockingStepExecution.java:44)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test Splunk)
+Stage "Test Splunk" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate Destroy)
+Stage "Validate Destroy" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Terraform Destroy)
+Stage "Terraform Destroy" skipped due to earlier failure(s)
+[Pipeline] getContext
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] sh
++ rm -f dynamic_inventory.ini
+[Pipeline] dir
+Running in /var/lib/jenkins/workspace/BYOD3_dev/infra/terraform
+[Pipeline] {
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ terraform destroy -auto-approve
+aws_security_group.app_sg: Refreshing state... [id=sg-029043f7f50b05151]
+aws_instance.app_server: Refreshing state... [id=i-03c59314433df2bff]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_instance.app_server will be destroyed
+  - resource "aws_instance" "app_server" {
+      - ami                                  = "ami-03deb8c961063af8c" -> null
+      - arn                                  = "arn:aws:ec2:us-east-1:522614117562:instance/i-03c59314433df2bff" -> null
+      - associate_public_ip_address          = true -> null
+      - availability_zone                    = "us-east-1f" -> null
+      - cpu_core_count                       = 1 -> null
+      - cpu_threads_per_core                 = 2 -> null
+      - disable_api_stop                     = false -> null
+      - disable_api_termination              = false -> null
+      - ebs_optimized                        = false -> null
+      - get_password_data                    = false -> null
+      - hibernation                          = false -> null
+      - id                                   = "i-03c59314433df2bff" -> null
+      - instance_initiated_shutdown_behavior = "stop" -> null
+      - instance_state                       = "running" -> null
+      - instance_type                        = "t3.micro" -> null
+      - ipv6_address_count                   = 0 -> null
+      - ipv6_addresses                       = [] -> null
+      - key_name                             = "fullstack-cicd" -> null
+      - monitoring                           = false -> null
+      - placement_partition_number           = 0 -> null
+      - primary_network_interface_id         = "eni-068dffbff958e4dac" -> null
+      - private_dns                          = "ip-172-31-73-165.ec2.internal" -> null
+      - private_ip                           = "172.31.73.165" -> null
+      - public_dns                           = "ec2-3-239-117-252.compute-1.amazonaws.com" -> null
+      - public_ip                            = "3.239.117.252" -> null
+      - secondary_private_ips                = [] -> null
+      - security_groups                      = [
+          - "app-sg20251224101623868400000001",
+        ] -> null
+      - source_dest_check                    = true -> null
+      - subnet_id                            = "subnet-0e371f3831b52fb40" -> null
+      - tags                                 = {
+          - "Name" = "cicd-app-server"
+        } -> null
+      - tags_all                             = {
+          - "Name" = "cicd-app-server"
+        } -> null
+      - tenancy                              = "default" -> null
+      - user_data_replace_on_change          = false -> null
+      - vpc_security_group_ids               = [
+          - "sg-029043f7f50b05151",
+        ] -> null
+        # (7 unchanged attributes hidden)
+
+      - capacity_reservation_specification {
+          - capacity_reservation_preference = "open" -> null
+        }
+
+      - cpu_options {
+          - core_count       = 1 -> null
+          - threads_per_core = 2 -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - credit_specification {
+          - cpu_credits = "unlimited" -> null
+        }
+
+      - enclave_options {
+          - enabled = false -> null
+        }
+
+      - maintenance_options {
+          - auto_recovery = "default" -> null
+        }
+
+      - metadata_options {
+          - http_endpoint               = "enabled" -> null
+          - http_protocol_ipv6          = "disabled" -> null
+          - http_put_response_hop_limit = 1 -> null
+          - http_tokens                 = "optional" -> null
+          - instance_metadata_tags      = "disabled" -> null
+        }
+
+      - private_dns_name_options {
+          - enable_resource_name_dns_a_record    = false -> null
+          - enable_resource_name_dns_aaaa_record = false -> null
+          - hostname_type                        = "ip-name" -> null
+        }
+
+      - root_block_device {
+          - delete_on_termination = true -> null
+          - device_name           = "/dev/sda1" -> null
+          - encrypted             = false -> null
+          - iops                  = 100 -> null
+          - tags                  = {} -> null
+          - tags_all              = {} -> null
+          - throughput            = 0 -> null
+          - volume_id             = "vol-03d0b6f8033ef137d" -> null
+          - volume_size           = 8 -> null
+          - volume_type           = "gp2" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # aws_security_group.app_sg will be destroyed
+  - resource "aws_security_group" "app_sg" {
+      - arn                    = "arn:aws:ec2:us-east-1:522614117562:security-group/sg-029043f7f50b05151" -> null
+      - description            = "Allow SSH and HTTP" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - from_port        = 0
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "-1"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 0
+                # (1 unchanged attribute hidden)
+            },
+        ] -> null
+      - id                     = "sg-029043f7f50b05151" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - from_port        = 22
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 22
+                # (1 unchanged attribute hidden)
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - from_port        = 8000
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 8000
+                # (1 unchanged attribute hidden)
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - from_port        = 8089
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 8089
+                # (1 unchanged attribute hidden)
+            },
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - from_port        = 9997
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 9997
+                # (1 unchanged attribute hidden)
+            },
+        ] -> null
+      - name                   = "app-sg20251224101623868400000001" -> null
+      - name_prefix            = "app-sg" -> null
+      - owner_id               = "522614117562" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {} -> null
+      - tags_all               = {} -> null
+      - vpc_id                 = "vpc-0a9f83f4566ed91fb" -> null
+    }
+
+Plan: 0 to add, 0 to change, 2 to destroy.
+
+Changes to Outputs:
+  - app_server_instance_id = "i-03c59314433df2bff" -> null
+  - app_server_public_ip   = "3.239.117.252" -> null
+aws_instance.app_server: Destroying... [id=i-03c59314433df2bff]
+aws_instance.app_server: Still destroying... [id=i-03c59314433df2bff, 00m10s elapsed]
+aws_instance.app_server: Still destroying... [id=i-03c59314433df2bff, 00m20s elapsed]
+aws_instance.app_server: Still destroying... [id=i-03c59314433df2bff, 00m30s elapsed]
+aws_instance.app_server: Still destroying... [id=i-03c59314433df2bff, 00m41s elapsed]
+aws_instance.app_server: Destruction complete after 45s
+aws_security_group.app_sg: Destroying... [id=sg-029043f7f50b05151]
+aws_security_group.app_sg: Destruction complete after 2s
+
+Destroy complete! Resources: 2 destroyed.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+ERROR: Ansible playbook execution failed
+
+GitHub has been notified of this commit’s build result
+
+Finished: FAILURE
