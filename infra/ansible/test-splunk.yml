@@ -1,0 +1,13 @@
+- hosts: splunk
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Check Splunk Enterprise status
+      command: /opt/splunk/bin/splunk status
+      register: splunk_status
+      changed_when: false
+
+    - name: Show Splunk status
+      debug:
+        var: splunk_status.stdout

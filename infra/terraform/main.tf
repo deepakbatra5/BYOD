@@ -1,4 +1,4 @@
-terraform {
+terraform { 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -15,16 +15,15 @@ terraform {
   }
 }
 
-
-
 provider "aws" {
   region = var.aws_region
 }
 
 resource "aws_security_group" "app_sg" {
-  name_prefix        = "app-sg"
+  name_prefix = "app-sg"
   description = "Allow SSH and HTTP"
 
+  # SSH
   ingress {
     from_port   = 22
     to_port     = 22
@@ -32,25 +31,30 @@ resource "aws_security_group" "app_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # ======================
+  # SPLUNK PORTS (ADDED)
+  # ======================
+
+  # Splunk Web UI
   ingress {
-    from_port   = 4000
-    to_port     = 4000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  
-  # Prometheus
-  ingress {
-    from_port   = 9090
-    to_port     = 9090
+    from_port   = 8000
+    to_port     = 8000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Grafana
+  # Splunk Management Port
   ingress {
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 8089
+    to_port     = 8089
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Splunk Forwarder (optional but safe)
+  ingress {
+    from_port   = 9997
+    to_port     = 9997
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -72,21 +76,4 @@ resource "aws_instance" "app_server" {
   tags = {
     Name = "cicd-app-server"
   }
-  
 }
-data "template_file" "ansible_inventory" {
-  template = file("${path.module}/../ansible/inventory.tpl")
-
-  vars = {
-    public_ip = aws_instance.app_server.public_ip
-  }
-}
-
-
-
-resource "local_file" "ansible_inventory" {
-  content  = data.template_file.ansible_inventory.rendered
-  filename = "${path.module}/../ansible/inventory.ini"
-}
-
-
