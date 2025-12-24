@@ -74,19 +74,6 @@ resource "aws_instance" "app_server" {
   }
   
 }
-data "template_file" "ansible_inventory" {
-  template = file("${path.module}/../ansible/inventory.tpl")
 
-  vars = {
-    public_ip = aws_instance.app_server.public_ip
-  }
-}
-
-
-
-resource "local_file" "ansible_inventory" {
-  content  = data.template_file.ansible_inventory.rendered
-  filename = "${path.module}/../ansible/inventory.ini"
-}
 
 
