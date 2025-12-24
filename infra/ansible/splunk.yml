@@ -8,9 +8,9 @@
         state: present
         update_cache: yes
 
-    - name: Download Splunk Enterprise (stable)
+    - name: Download Splunk Enterprise (latest stable)
       get_url:
-        url: https://download.splunk.com/products/splunk/releases/9.2.1/linux/splunk-9.2.1-linux-amd64.tgz
+        url: https://download.splunk.com/products/splunk/releases/latest/linux/splunk-latest-linux-amd64.tgz
         dest: /tmp/splunk.tgz
         mode: '0644'
 
