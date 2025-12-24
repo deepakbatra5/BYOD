@@ -1,8 +1,26 @@
 - hosts: splunk
   become: yes
   tasks:
-    - name: Install Splunk
-      shell: |
-        wget -O splunk.tgz https://download.splunk.com/products/splunk/releases/9.2.0/linux/splunk-9.2.0.tgz
-        tar -xzf splunk.tgz -C /opt
-        /opt/splunk/bin/splunk start --accept-license --answer-yes
+
+    - name: Install required packages
+      apt:
+        name: wget
+        state: present
+        update_cache: yes
+
+    - name: Download Splunk Enterprise
+      get_url:
+        url: https://download.splunk.com/products/splunk/releases/9.1.3/linux/splunk-9.1.3-1c86ca0bacc3-Linux-x86_64.tgz
+        dest: /tmp/splunk.tgz
+        mode: '0644'
+
+    - name: Extract Splunk
+      unarchive:
+        src: /tmp/splunk.tgz
+        dest: /opt
+        remote_src: yes
+
+    - name: Start Splunk and accept license
+      command: /opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt
+      args:
+        creates: /opt/splunk/bin/splunk
