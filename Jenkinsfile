@@ -38,19 +38,19 @@ pipeline {
         }
 
         /* =========================
-           CAPTURE OUTPUTS (TASK 1)
+           CAPTURE OUTPUTS (TASK 1) ✅ FIXED
         ========================== */
         stage('Capture Terraform Outputs') {
             steps {
                 dir('infra/terraform') {
                     script {
                         env.INSTANCE_IP = sh(
-                            script: "terraform output -raw instance_public_ip",
+                            script: "terraform output -raw app_server_public_ip",
                             returnStdout: true
                         ).trim()
 
                         env.INSTANCE_ID = sh(
-                            script: "terraform output -raw instance_id",
+                            script: "terraform output -raw app_server_instance_id",
                             returnStdout: true
                         ).trim()
 
